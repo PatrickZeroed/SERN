@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Praça Acesa – Dashboard de Energia (SERS)</title>
+<style>
+:root{--bg:#f3f1ea;--sf:#fff;--tx:#1b2433;--mu:#5d6779;--ac:#c27a00;--gn:#1f7a5a;--bl:#2f5d9e;--ln:#d9d5c8;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1624;--sf:#172136;--tx:#e8ecf4;--mu:#9aa6bd;--ac:#f2b43a;--gn:#4fc79a;--bl:#7fa8e8;--ln:#2a3753;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1624;--sf:#172136;--tx:#e8ecf4;--mu:#9aa6bd;--ac:#f2b43a;--gn:#4fc79a;--bl:#7fa8e8;--ln:#2a3753;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 "Source Sans 3",system-ui,sans-serif}
+main{max-width:980px;margin:0 auto;padding:24px 16px 56px}
+h1{font:700 2rem/1.15 "Fraunces",Georgia,serif;margin:0 0 6px}h2{font:600 1.25rem "Fraunces",Georgia,serif;margin:36px 0 10px}
+p{margin:0 0 10px;max-width:70ch}.mu{color:var(--mu);font-size:.92rem}
+.row{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+button,input{font:inherit;color:var(--tx)}
+.tab{background:var(--sf);border:1px solid var(--ln);border-radius:8px;padding:8px 12px;cursor:pointer}
+.tab[aria-pressed=true]{border-color:var(--ac);box-shadow:inset 0 -3px 0 var(--ac);font-weight:600}
+button:focus-visible,input:focus-visible{outline:2px solid var(--bl);outline-offset:2px}
+label{display:flex;flex-direction:column;font-size:.85rem;color:var(--mu);gap:2px}
+input{background:var(--sf);border:1px solid var(--ln);border-radius:6px;padding:6px 8px;width:110px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0;border:1px solid var(--ln);background:var(--sf)}
+.k{padding:14px;border-right:1px solid var(--ln);border-bottom:1px solid var(--ln)}
+.k b{display:block;font:700 1.5rem "Fraunces",Georgia,serif}.k span{font-size:.82rem;color:var(--mu)}
+.card{background:var(--sf);border:1px solid var(--ln);padding:14px;overflow-x:auto}
+.bar{display:grid;grid-template-columns:150px 1fr 90px;gap:8px;align-items:center;margin:6px 0;font-size:.9rem}
+.bar i{display:block;height:16px;background:var(--ac)}.bar i.g{background:var(--gn)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:.9rem}th,td{padding:6px 8px;border-bottom:1px solid var(--ln);text-align:right}th:first-child,td:first-child{text-align:left}
+@media (max-width:560px){.bar{grid-template-columns:100px 1fr 70px}}
+</style></head><body><main>
+<h1>Praça Acesa</h1>
+<p class="mu">Iluminação pública eficiente e solar para uma praça comunitária de São Paulo. Contribuição de SERS ao Neighborhood Action Dashboard. Todos os valores são projeções condicionadas às premissas abaixo, não resultados garantidos.</p>
+
+<h2>Cenário</h2>
+<div class="row" id="tabs"></div>
+<div class="row">
+<label>Postes<input id="n" type="number" value="12" min="1"></label>
+<label>Horas acesas/dia<input id="h" type="number" value="12" min="1" max="24" step=".5"></label>
+<label>Tarifa (R$/kWh)<input id="t" type="number" value="0.43416" min="0.1" step=".01"></label>
+<label>FV (kWp)<input id="k" type="number" value="1.65" min="0" step=".05"></label>
+</div>
+<div class="kpis" id="kpis"></div>
+
+<h2>Consumo mensal por cenário</h2>
+<div class="card" id="bars"></div>
+
+<h2>Geração solar × consumo, mês a mês</h2>
+<div class="card"><svg id="mc" viewBox="0 0 640 220" width="100%" role="img" aria-label="Consumo e geração mensal em kWh"></svg>
+<p class="mu">Barras: geração FV. Linha: consumo do cenário. Irradiação mensal estimada para São Paulo (média ≈ 4,5 kWh/m²/dia); no cenário sem FV só a linha aparece.</p></div>
+
+<h2>Comparação das alternativas</h2>
+<div class="card"><table id="tb"></table></div>
+
+<h2>Diagrama da solução</h2>
+<div class="card"><pre class="mermaid">flowchart LR
+A[Rede elétrica] --> M[Medidor bidirecional]
+S[Módulos FV 1,65 kWp] --> I[Inversor on-grid] --> M
+M --> L[12 luminárias LED 60 W]
+P[Sensores de presença] --> G[Gateway]
+L --> G
+G --> R[Regra: 30% sem presença, 100% com presença]
+R --> L
+G --> D[Processamento: kWh, R$, CO2e]
+M --> D
+D --> N[Dashboard: 6 indicadores]</pre></div>
+
+<h2>Premissas</h2>
+<p class="mu">Base: 12 luminárias de vapor de sódio, 175 W cada (lâmpada + reator), 12 h/noite. LED: 60 W. Dimerização: 60% das horas noturnas sem presença, a 30% da potência. Sensores e gateway: 2 W por ponto, 24 h. FV: desempenho global 80%. Tarifa B4a: R$ 0,434/kWh (259,83 + 174,33 R$/MWh, sem tributos). Fator de emissão: 0,0442 kg CO₂e/kWh (média simples jan–set/2026, inventário MCTI do SIN). Custos unitários são estimativas de mercado a validar com orçamentos. Detalhes e referências no README.</p>
+</main>
+<script>
+const D=[31,28,31,30,31,30,31,31,30,31,30,31],HSP=[5.1,5.3,4.8,4.4,3.7,3.5,3.7,4.4,4.3,4.8,5,5.2],FE=0.04422;
+const S=[{id:0,nm:"Base: vapor de sódio"},{id:1,nm:"A: LED"},{id:2,nm:"B: LED + sensores"},{id:3,nm:"C: B + solar FV"}];
+let sel=3;const $=i=>document.getElementById(i);
+const f=(x,d=0)=>x.toLocaleString("pt-BR",{maximumFractionDigits:d,minimumFractionDigits:d});
+function calc(){const n=+$("n").value,h=+$("h").value,t=+$("t").value,kwp=+$("k").value;
+const day=[n*175*h/1000,n*60*h/1000,n*60*(h*.4+h*.6*.3)/1000+n*2*24/1000];day[3]=day[2];
+const capex=[0,n*600,n*600+n*180+600,n*600+n*180+600+kwp*5000];
+const gen=HSP.map((x,i)=>kwp*x*.8*D[i]);
+return S.map((s,i)=>{const m=D.map(d=>day[i]*d);const y=m.reduce((a,b)=>a+b,0);
+const G=i==3?gen.reduce((a,b)=>a+b,0):0;const net=Math.max(y-G,0);
+const base=day[0]*365;return{...s,m,y,G,net,cost:net*t,capex:capex[i],sav:(base-net)*t,pct:(1-net/base)*100,ren:i==3?Math.min(G/y,1)*100:0,co2:(base-net)*FE,gen:i==3?gen:null,hr:i>=2?h*.4+h*.6*.3:h}});}
+function draw(){const R=calc(),c=R[sel],b=R[0];
+$("tabs").innerHTML="";S.forEach(s=>{const e=document.createElement("button");e.className="tab";e.textContent=s.nm;e.setAttribute("aria-pressed",s.id==sel);e.onclick=()=>{sel=s.id;draw()};$("tabs").append(e)});
+const K=[[f(c.y/12)+" kWh","Consumo por mês"],[f(c.pct)+"%","Economia de energia da rede"],["R$ "+f(c.sav/12),"Redução de custo por mês"],[f(c.ren)+"%","Participação renovável"],[f(c.co2)+" kg","CO₂e evitado por ano"],[f(c.hr,1)+" h","Horas equivalentes a plena carga por dia"]];
+$("kpis").innerHTML=K.map(k=>`<div class="k"><b>${k[0]}</b><span>${k[1]}</span></div>`).join("");
+const mx=Math.max(...R.map(r=>r.y/12));
+$("bars").innerHTML=R.map((r,i)=>`<div class="bar"><span>${r.nm}</span><i class="${i==3?'g':''}" style="width:${r.y/12/mx*100}%"></i><span>${f(r.y/12)} kWh</span></div>`).join("");
+const top=Math.max(...c.m,...(c.gen||[0]))*1.1,X=i=>40+i*50,Y=v=>190-v/top*170;
+let sv=`<line x1="40" y1="190" x2="640" y2="190" stroke="var(--ln)"/>`;
+if(c.gen)sv+=c.gen.map((v,i)=>`<rect x="${X(i)}" y="${Y(v)}" width="30" height="${190-Y(v)}" fill="var(--gn)"/>`).join("");
+sv+=`<polyline fill="none" stroke="var(--ac)" stroke-width="3" points="${c.m.map((v,i)=>X(i)+15+","+Y(v)).join(" ")}"/>`;
+sv+=["J","F","M","A","M","J","J","A","S","O","N","D"].map((l,i)=>`<text x="${X(i)+15}" y="208" text-anchor="middle" font-size="12" fill="var(--mu)">${l}</text>`).join("")+`<text x="4" y="14" font-size="12" fill="var(--mu)">kWh/mês (máx. ${f(top)})</text>`;
+$("mc").innerHTML=sv;
+$("tb").innerHTML="<tr><th>Cenário</th><th>kWh/ano</th><th>Economia</th><th>R$/ano (rede)</th><th>Investimento</th><th>Retorno</th><th>kg CO₂e/ano</th></tr>"+R.map((r,i)=>`<tr><td>${r.nm}</td><td>${f(r.net)}</td><td>${f(r.pct)}%</td><td>${f(r.cost)}</td><td>${i?"R$ "+f(r.capex):"–"}</td><td>${i&&r.sav>0?f(r.capex/r.sav*12,0)+" meses":"–"}</td><td>${f(b.y*FE-r.co2+0*1)}</td></tr>`).join("");}
+document.querySelectorAll("input").forEach(i=>i.oninput=draw);draw();
+</script>
+<!--claude-mermaid-runtime-begin:3477-->
+<style>.mermaid-diagram{margin-block:4px}.mermaid-diagram svg{display:block;margin:0 auto;max-width:100%;height:auto}</style>
+<script src="/_runtime/mermaid-11.16.1.min.js"></script>
+<script>(function(){
+var CFG={"palettes":{"light":{"surface":"#f4efe4","text":"#42392e","line":"#8a7f6d","border":"#7a6c52","bg":"#fffdf8"},"dark":{"surface":"#262b34","text":"#f2f3f5","line":"#a8adb8","border":"#9aa4b8","bg":"#1f232b"}}};
+if(typeof mermaid==='undefined')return;
+var pres=Array.prototype.slice.call(document.querySelectorAll('pre.mermaid')).filter(function(p){if(p.hasAttribute('data-claude-mermaid-claimed'))return false;p.setAttribute('data-claude-mermaid-claimed','1');return true;});
+if(!pres.length)return;
+var mq=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null;
+var root=document.documentElement;
+var items=pres.map(function(pre){
+var mount=document.createElement('div');mount.className='mermaid-diagram';
+return {pre:pre,mount:mount,src:pre.textContent||''};
+});
+var seq=0;
+var renderGen=0;
+var lastKey='';
+function pageBg(fallback){
+var els=[document.body,document.documentElement];
+for(var i=0;i<els.length;i++){
+var c=els[i]&&getComputedStyle(els[i]).backgroundColor;
+if(c&&c!=='transparent'&&c!=='rgba(0, 0, 0, 0)')return c;
+}
+return fallback;
+}
+function render(){
+var theme=root.getAttribute('data-theme');
+var dark=theme==='dark'||(!!(mq&&mq.matches)&&theme!=='light');
+var pal=dark?CFG.palettes.dark:CFG.palettes.light;
+var bg=pageBg(pal.bg);
+var key=(dark?'d':'l')+'|'+bg;
+if(key===lastKey)return;
+lastKey=key;
+var gen=++renderGen;
+var font=getComputedStyle(document.body).fontFamily||'sans-serif';
+var nat={useMaxWidth:false};
+mermaid.initialize({
+startOnLoad:false,securityLevel:'strict',theme:'base',
+flowchart:nat,sequence:nat,er:nat,state:nat,class:nat,pie:nat,
+gantt:nat,journey:nat,timeline:nat,gitGraph:nat,mindmap:nat,xyChart:nat,
+quadrantChart:nat,sankey:nat,c4:nat,requirement:nat,block:nat,
+packet:nat,kanban:nat,architecture:nat,radar:nat,
+themeVariables:{background:bg,mainBkg:pal.surface,primaryColor:pal.surface,
+primaryTextColor:pal.text,lineColor:pal.line,primaryBorderColor:pal.border,
+nodeBorder:pal.border,clusterBorder:pal.border,edgeLabelBackground:bg,
+clusterBkg:'rgba(127,127,127,0.07)',titleColor:pal.text,
+darkMode:dark,rowOdd:bg,rowEven:'rgba(127,127,127,0.07)',
+attributeBackgroundColorOdd:bg,attributeBackgroundColorEven:'rgba(127,127,127,0.07)',
+fontSize:'16px',fontFamily:font},
+themeCSS:'.node rect, .node circle, .node polygon, .node path, .cluster rect { stroke-width: 2px; }'
+});
+items.forEach(function(it){
+var id='claude-mermaid-'+seq++;
+mermaid.render(id,it.src).then(function(r){
+if(gen!==renderGen)return;
+var prev=it.pre.previousElementSibling;
+if(prev&&prev.className==='mermaid-diagram'&&prev!==it.mount)return;
+it.mount.innerHTML=r.svg;
+if(!it.mount.parentNode)it.pre.parentNode.insertBefore(it.mount,it.pre);
+it.pre.style.display='none';
+},function(){
+var scratch=document.getElementById(id);
+if(scratch)scratch.parentNode.removeChild(scratch);
+scratch=document.getElementById('d'+id);
+if(scratch)scratch.parentNode.removeChild(scratch);
+if(gen!==renderGen)return;
+if(it.mount.parentNode)it.mount.parentNode.removeChild(it.mount);
+it.pre.style.display='';
+});
+});
+}
+render();
+if(mq&&mq.addEventListener)mq.addEventListener('change',render);
+if(typeof MutationObserver!=='undefined')new MutationObserver(render).observe(root,{attributes:true,attributeFilter:['data-theme']});
+})();</script>
+<!--claude-mermaid-runtime-end-->
+</body></html>
