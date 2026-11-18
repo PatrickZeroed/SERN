@@ -1,8 +1,5 @@
 # Praça Acesa – Contribuição de SERS ao Neighborhood Action Dashboard (CitizenTech)
 
-**Integrantes:** _(nome completo e RM de cada integrante)_
-**Disciplina:** Soluções em Energias Renováveis e Sustentáveis – Global Solution 2026.2
-**Contribuição de SERS:** pasta `sers/` (este README e `dashboard_sers.html`)
 
 ## 1. Diagnóstico
 
