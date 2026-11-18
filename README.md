@@ -79,25 +79,32 @@ D --> N[Dashboard: 6 indicadores]
 
 ## 6. Dashboard
 
-`dashboard_sers.html` (publicado em https://claude.ai/artifact/SwLaQ7hAjUc82DUuKGGSVW) permite trocar de cenário e alterar número de postes, horas, tarifa e kWp. Todos os indicadores e gráficos usam os cálculos acima. Para integrar ao dashboard do projeto, reutilize a função `calc()` do arquivo.
+`dashboard_sers.html` permite trocar de cenário e alterar número de postes, horas, tarifa e kWp. Todos os indicadores e gráficos usam os cálculos acima. Para integrar ao dashboard do projeto, reutilize a função `calc()` do arquivo.
 
 ## 7. Referências (ABNT)
 
 ANEEL. **Resolução Normativa nº 1.000, de 7 de dezembro de 2021.** Estabelece as Regras de Prestação do Serviço Público de Distribuição de Energia Elétrica. Brasília, DF: ANEEL, 2021.
 
-ANEEL. **Resolução Homologatória nº [número]/[ano]:** tarifas de aplicação da [distribuidora] – subgrupo B4 (iluminação pública). Brasília, DF: ANEEL, [ano]. Disponível em: [URL]. Acesso em: [data].
+ANEEL. **Resolução Homologatória nº 3.596/2026:** tarifas de aplicação da ENEL – subgrupo B4 (iluminação pública). São Paulo, DF: SP, 2026. Disponível em: (https://www.enel.com.br/pt-saopaulo/Para_Voce/tarifa-energia-eletrica.html). Acesso em: 18/11/2026.
 
-BRASIL. **Lei nº 14.300, de 6 de janeiro de 2022.** Institui o marco legal da microgeração e minigeração distribuída, o Sistema de Compensação de Energia Elétrica (SCEE) e o Programa de Energia Renovável Social (PERS). Diário Oficial da União, Brasília, DF, 7 jan. 2022. Disponível em: https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/lei/L14300.htm. Acesso em: [data].
+BRASIL. **Lei nº 14.300, de 6 de janeiro de 2022.** Institui o marco legal da microgeração e minigeração distribuída, o Sistema de Compensação de Energia Elétrica (SCEE) e o Programa de Energia Renovável Social (PERS). Diário Oficial da União, Brasília, DF, 7 jan. 2022. Disponível em: https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/lei/L14300.htm. Acesso em: 18/11/2026.
 
-BRASIL. Ministério da Ciência, Tecnologia e Inovação. **Fatores de emissão de CO₂ pela geração de energia elétrica no Sistema Interligado Nacional do Brasil:** fator médio mensal e anual (tCO₂/MWh), 2006 a set. 2026. Brasília, DF: MCTI, 2026. Planilha eletrônica (Inventario_2026_janset.xlsx). Dados do SIRENE. Disponível em: [URL do MCTI/SIRENE]. Acesso em: [data].
+BRASIL. Ministério da Ciência, Tecnologia e Inovação. **Fatores de emissão de CO₂ pela geração de energia elétrica no Sistema Interligado Nacional do Brasil:** fator médio mensal e anual (tCO₂/MWh), 2006 a set. 2026. Brasília, DF: MCTI, 2026. Planilha eletrônica (Inventario_2026_janset.xlsx). Dados do SIRENE. Disponível em: [URL do MCTI/SIRENE]. Acesso em: 18/11/2026.
 
-CRESESB. **SunData v3.0:** potencial solar – irradiação no plano inclinado. Rio de Janeiro: CEPEL, [s.d.]. Disponível em: https://cresesb.cepel.gov.br/index.php?section=sundata. Acesso em: [data].
+CRESESB. **SunData v3.0:** potencial solar – irradiação no plano inclinado. Rio de Janeiro: CEPEL, [s.d.]. Disponível em: https://cresesb.cepel.gov.br/index.php?section=sundata. Acesso em: 18/11/2026.
 
-PEREIRA, E. B. *et al.* **Atlas brasileiro de energia solar.** 2. ed. São José dos Campos: INPE, 2017. Disponível em: http://labren.ccst.inpe.br/atlas_2017.html. Acesso em: [data].
+PEREIRA, E. B. *et al.* **Atlas brasileiro de energia solar.** 2. ed. São José dos Campos: INPE, 2017. Disponível em: http://labren.ccst.inpe.br/atlas_2017.html. Acesso em: 18/11/2026.
 
-[ORÇAMENTOS / FORNECEDORES]. **Orçamentos de luminárias LED, sensores de presença, gateway e sistema fotovoltaico.** [Cidade]: [empresa], [ano]. (anexar em `sers/dados/orcamentos/`).
+PREFEITURA MUNICIPAL DE ERECHIM. Registro de preços: luminárias viárias LED, itens 92 a 113. Erechim, RS, [s.d.]. Disponível em: https://pmerechim.rs.gov.br/uploads/paginas/0452a2442aab2edc57129d087e4b01fd.pdf. Acesso em: 17 nov. 2026.
 
-GLOBAL SOLUTION 2026.2. **Soluções em Energias Renováveis e Sustentáveis (SERS):** desafio integrador Neighborhood Action Dashboard – CitizenTech. Ciência da Computação, turmas 1CC. 2026. (enunciado da atividade, fonte da expressão E = P × t / 1000).
+ORSE. Composição ORSE-13065: luminária pública decorativa a LED Linha Planetária 60 W. Disponível em: https://orcamentor.com/orse/composicoes/ORSE-13065/. Acesso em: 17 nov. 2026.
+
+ORSE. Composição ORSE-13202: luminária LED LPL ÁTON 60 com telegestão. Disponível em: https://orcamentor.com/orse/composicoes/ORSE-13202/. Acesso em: 17 nov. 2026.
+
+MAGAZINE LUIZA. Busca "kit solar microinversor" e marca Growatt. Disponível em: https://m.magazineluiza.com.br/busca/kit+solar+microinversor e https://www.magazineluiza.com.br/marcas/growatt. Acesso em: 17 nov. 2026.
+
+KOMECO. Kit geração de energia solar 1,10 kWp. Disponível em: https://loja.komeco.com.br/kit-geracao-de-energia-solar-110-kwp-ceramico/p. Acesso em: 17 nov. 2026.
+
 
 ### Origem de cada dado
 
